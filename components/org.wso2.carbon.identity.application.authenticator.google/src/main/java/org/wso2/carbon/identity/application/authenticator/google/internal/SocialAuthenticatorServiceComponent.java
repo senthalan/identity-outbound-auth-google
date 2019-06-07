@@ -15,7 +15,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.wso2.carbon.identity.application.authenticator.google.internal;
 
 import org.apache.commons.logging.Log;
@@ -23,36 +22,38 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.identity.application.authentication.framework.ApplicationAuthenticator;
 import org.wso2.carbon.identity.application.authenticator.google.GoogleOAuth2Authenticator;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
-/**
- * @scr.component name="identity.application.authenticator.google.component"
- * immediate="true"
- */
+@Component(
+         name = "identity.application.authenticator.google.component", 
+         immediate = true)
 public class SocialAuthenticatorServiceComponent {
 
     private static final Log log = LogFactory.getLog(SocialAuthenticatorServiceComponent.class);
 
+    @Activate
     protected void activate(ComponentContext ctxt) {
         try {
-
-
             GoogleOAuth2Authenticator googleAuthenticator = new GoogleOAuth2Authenticator();
-            ctxt.getBundleContext().registerService(ApplicationAuthenticator.class.getName(),
-                    googleAuthenticator, null);
-
-
+            ctxt.getBundleContext().registerService(ApplicationAuthenticator.class.getName(), googleAuthenticator, null);
             if (log.isDebugEnabled()) {
                 log.debug("Google Social Authenticator bundle is activated.");
             }
-
         } catch (Throwable e) {
             log.fatal("Error while activating Google Social authenticator bundle.", e);
         }
     }
 
+    @Deactivate
     protected void deactivate(ComponentContext ctxt) {
         if (log.isDebugEnabled()) {
             log.debug("Google Social Authenticator bundle is deactivated.");
         }
     }
 }
+
